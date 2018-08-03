@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <h1>TODO</h1>
+    <p>Put in stuff</p>
+
+    <div id="content">
+      <div id="shop-image-container">
+        <img id="shop-image" alt="Inbox - Subtle Actions T-Shirt" src="../data/images/10-13256A.jpg" style="opacity: 1; transition: opacity 0.5s;">
+      </div>
+
+      <div class="detail" has-content="">
+
+        <h1>Inbox - Subtle Actions T-Shirt</h1>
+        <div class="price">$17.05</div>
+        <div class="pickers">
+
+          <!-- Size selector -->
+          <shop-select>
+            <label id="sizeLabel" prefix="">Size</label>
+            <select id="sizeSelect" aria-labelledby="sizeLabel">
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M" selected="">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+            <shop-md-decorator aria-hidden="true">
+              <shop-underline></shop-underline>
+            </shop-md-decorator>
+          </shop-select>
+
+          <!-- Quantity selector -->
+          <shop-select>
+            <label id="quantityLabel" prefix="">Quantity</label>
+            <select id="quantitySelect" aria-labelledby="quantityLabel">
+              <option value="1" selected="">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <shop-md-decorator aria-hidden="true">
+              <shop-underline></shop-underline>
+            </shop-md-decorator>
+          </shop-select>
+        </div>
+
+
+        <div class="description">
+          <h2>Description</h2>
+          <p id="desc">Sometimes even the subtlest of actions can make a big difference. This tee highlights all of the icons &amp; features available in your Gmail inbox!</p>
+            <div><br></div>
+            <div>Features:</div>
+            <div><ul>
+              <li>60% cotton, 40% polyester blend.</li>
+              <li>Available in charcoal heather with the inbox icons screenprinted at front chest and inbox tag sewn onto left sleeve.</li>
+            </ul></div>
+          </p>
+        </div>
+
+        <div id="buyButtons">
+          <div responsive="" id="buyNow" visible="">
+            <button style="background-color:#000;background-image:url('https://www.gstatic.com/instantbuy/svg/dark_long_gpay.svg');background-origin:content-box;background-position:center;background-repeat:no-repeat;background-size:contain;border:0;border-radius:4px;box-shadow:0 1px 1px 0 #3c40434D, 0 1px 3px 1px #3c404326;cursor:pointer;height:40px;min-height:40px;min-width:120px;outline:0;padding:11px 24px;width:100%"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script type="text/javascript" src="./myapp.js"></script>
+  </body>
+</html>
