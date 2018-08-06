@@ -1,8 +1,10 @@
+# Google Pay Simple Web Checkout Demo
+
 This is a simple playground to experiment with content for the codelab...
 
 Legit work will evolve into other folders and playground may die off in favor of branching.
 
-### Local Development
+## Local Development
 
 We will be working with static files, so you don't need a local webserver,
 but if you would like to use one *(for live-reload on file changes)* feel free.
