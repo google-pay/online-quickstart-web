@@ -8,7 +8,6 @@
  *
  * NOTE: use minimal external resources (no jquery, react, polymer, etc)
  */
-console.log('myapp');
 
 /**
  * ====================
@@ -19,6 +18,7 @@ const GLOBAL_RAM_CACHE = {};
 
 // load a new random shirt into the UI
 function loadShirt(gender) {
+  domId('loading').style.display = 'block';
   const options = ['./data/ladies_tshirts.json', './data/mens_tshirts.json'];
   let optionIndex = Math.floor(Math.random()*2);
   if (gender == 'female') {
@@ -62,13 +62,41 @@ function domId(id) {
   return document.getElementById(id);
 }
 
+function decodeHTMLEntities(text) {
+  var entities = [
+    ['amp', '&'],
+    ['apos', '\''],
+    ['#x27', '\''],
+    ['#x2F', '/'],
+    ['#39', '\''],
+    ['#47', '/'],
+    ['lt', '<'],
+    ['gt', '>'],
+    ['nbsp', ' '],
+    ['quot', '"']
+  ];
+  for (var i = 0, max = entities.length; i < max; ++i) {
+    text = text.replace(new RegExp('&'+entities[i][0]+';', 'g'), entities[i][1]);
+  }
+  return text;
+}
+
 function uiAssignShirt(shirt) {
+  domId('shop-image').onload = function(e) {
+    // stopping loading only after the t-shirt image is loaded
+    domId('loading').style.display = 'none';
+  };
   domId('shop-image').src = shirt.largeImage;
   domId('shop-price').innerHTML = '$' + Number.parseFloat(shirt.price).toFixed(2);
   domId('shop-title').innerHTML = shirt.title;
-  domId('shop-description').innerHTML = '';
-  domId('shop-description').insertAdjacentHTML('afterbegin', shirt.title);
-
+  // parse escaped html as a string from json object (DANGER)
+  const parser = new DOMParser();
+  const parsedHtml = parser.parseFromString(decodeHTMLEntities(shirt.description), 'text/html');
+  domId('shop-description').innerHTML = (
+    parsedHtml
+    && parsedHtml.body
+    && parsedHtml.body.innerHTML
+  ) || '';
 }
 
 function uiPageError(msg) {
@@ -111,12 +139,14 @@ function onHashChange(e) {
 // assign UI to page elements
 function uiInitialize() {
   window.addEventListener('hashchange', onHashChange.bind(this));
+  // TODO only trigger this click function if hash matches, otherwise we run twice
   domId('nav-tshirt-male').addEventListener('click', loadShirt.bind(this, 'male'));
   domId('nav-tshirt-female').addEventListener('click', loadShirt.bind(this, 'female'));
   domId('nav-tshirt-any').addEventListener('click', loadShirt.bind(this, 'any'));
   onHashChange(null);
 }
 
-
-// TODO, move into domready?
-uiInitialize();
+// when domready, load up our UI functionality
+document.addEventListener("DOMContentLoaded", function(event) {
+  uiInitialize();
+});

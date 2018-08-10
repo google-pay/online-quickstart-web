@@ -34,21 +34,21 @@ img {
 [hidden] {
   display: none !important;
 }
-  
+
 shop-select {
   display: inline-block;
-  position: relative; 
+  position: relative;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
-  
+
 shop-select > shop-md-decorator {
   display: block;
   border-top: 1px solid #ccc;
   height: 1px;
   speak: none;
 }
-  
+
 shop-select > shop-md-decorator::after {
   content: '\25BC';
   display: block;
@@ -61,7 +61,7 @@ shop-select > shop-md-decorator::after {
   color: var(--app-secondary-color);
   pointer-events: none;
 }
-  
+
 shop-select > select {
   width: 100%;
   font-size: 16px;
@@ -78,11 +78,11 @@ shop-select > select {
   margin: 0;
   outline: none;
 }
-  
+
 shop-select > select::-ms-expand {
   display: none;
 }
-  
+
 shop-select > shop-md-decorator > shop-underline {
   display: block;
   background-color: var(--app-accent-color);
@@ -96,23 +96,23 @@ shop-select > shop-md-decorator > shop-underline {
   transition: -webkit-transform 0.2s ease-in;
   transition: transform 0.2s ease-in;
 }
-  
+
 shop-select > select:focus + shop-md-decorator > shop-underline {
   -webkit-transform: scale3d(1, 1, 1);
   transform: scale3d(1, 1, 1);
   transition: -webkit-transform 0.2s ease-out;
   transition: transform 0.2s ease-out;
 }
-  
+
 shop-select > select:focus + shop-md-decorator::before, shop-select > select:focus + shop-md-decorator::after, shop-select > select:focus {
   color: black;
 }
-  
+
 shop-select > select:focus:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
-  
+
 shop-select > [prefix] {
   position: absolute;
   left: 0px;
@@ -121,24 +121,24 @@ shop-select > [prefix] {
   color: var(--app-secondary-color);
   pointer-events: none;
 }
-  
+
 #buyNow:not([visible]) {
   display: none;
 }
-  
+
 shop-button#buyNow > * {
   width: 100%;
 }
-  
+
 shop-button#addToCart > * {
   width: 100%;
   margin-bottom: 4px;
 }
-  
+
 #content {
   display: flex;
-  -ms-flex-direction: normal; 
-  -webkit-flex-direction: row; 
+  -ms-flex-direction: normal;
+  -webkit-flex-direction: row;
   flex-direction: row;
   -ms-flex-pack: center;
   -webkit-justify-content: center;
@@ -149,7 +149,7 @@ shop-button#addToCart > * {
   max-height: 100%;
   margin: 0 auto;
 }
-  
+
 #shop-image-container {
   position: relative;
   margin: 64px 32px;
@@ -157,13 +157,13 @@ shop-button#addToCart > * {
   max-width: 600px;
   overflow: hidden;
 }
-  
+
 #shop-image::before {
   content: "";
   display: block;
   padding-top: 100%;
 }
-  
+
 .detail {
   margin: 64px 32px;
   width: 50%;
@@ -171,59 +171,79 @@ shop-button#addToCart > * {
   transition: opacity 0.4s;
   opacity: 0;
 }
-  
+
 .detail[has-content] {
   opacity: 1;
 }
-  
+
 h1 {
   font-size: 24px;
   font-weight: 500;
   line-height: 28px;
   margin: 0;
 }
-  
+
 .price {
   margin: 16px 0 40px;
   font-size: 16px;
   color: var(--app-secondary-color);
 }
-  
+
 .description {
   margin: 32px 0;
 }
-  
+
 .description > h2 {
   margin: 16px 0;
   font-size: 13px;
 }
-  
+
 .description > * {
   margin: 0;
   color: var(--app-secondary-color);
 }
-  
+
 .pickers {
   border-top: 1px solid #ccc;
   flex-direction: column;
   display: flex;
 }
 
+#loading {
+    width: 118px;
+    height: 90px;
+    position: fixed;
+    top: 0px;
+    left: 48%;
+    background-position: center center;
+}
+#loading img {
+    max-width: 118px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
 @media (max-width: 767px) {
-  
+
   #content {
     align-content: normal;
     align-self: auto;
     display: flex;
-    -ms-flex-direction: normal; 
-    -webkit-flex-direction: column; 
+    -ms-flex-direction: normal;
+    -webkit-flex-direction: column;
     flex-direction: column;
     align-items: center;
     -webkit-align-items: center;
     -ms-flex-align: center;
     justify-content: center;
   }
-  
+
   .detail {
     box-sizing: border-box;
     margin: 32px 0;
@@ -231,7 +251,7 @@ h1 {
     width: 100%;
     max-width: 600px;
   }
-  
+
   h1 {
     font-size: 20px;
     line-height: 24px;
@@ -241,18 +261,18 @@ h1 {
     margin: 0;
     width: 80%;
   }
-  
+
   .price {
     font-size: inherit;
     margin: 12px 0 32px;
   }
-  
+
   #buyNow {
     right: 0;
     left: 50%
   }
-  
+
   shop-button[responsive]#buyNow > * {
     background-color: var(--app-secondary-color);
   }
-}    
+}
