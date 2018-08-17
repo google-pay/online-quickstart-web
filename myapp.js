@@ -42,17 +42,35 @@ const googlePayBaseConfiguration = {
   allowedPaymentMethods: [cardPaymentMethod]
 };
 
+
+
 function onGooglePayLoaded() {
   // console.log('onGooglePayLoaded triggered');
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: 'TEST'
   });
+
+  function createAndAddButton() {
+    const button = googlePayClient.createButton({
+      // defaults to black if default or omitted
+      buttonColor: 'default',
+      // defaults to long if omitted
+      buttonType: 'long',
+      onClick: onGooglePaymentsButtonClicked
+    });
+    document.getElementById('buyNow').appendChild(button);
+  }
+
+  function onGooglePaymentsButtonClicked() {
+    // TODO: Perform transaction
+  }
+
   // console.log('googlePayClient', googlePayClient);
   googlePayClient.isReadyToPay(googlePayBaseConfiguration)
     .then(function(response) {
       // console.log('googlePayClient isReadyToPay', response);
       if(response.result) {
-        // Add Google Pay button – createAndAddButton()
+        createAndAddButton();
       }
     }).catch(function(err) {
       // Log error.
