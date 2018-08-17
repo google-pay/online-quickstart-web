@@ -50,6 +50,26 @@ function onGooglePayLoaded() {
     environment: 'TEST'
   });
 
+  function onGooglePaymentsButtonClicked() {
+    const merchantInfo = {
+      merchantId: '0123456789',
+      merchantName: 'Example Merchant Name'
+    };
+
+    // TODO: get the price from the tshirt data
+    const transactionInfo = {
+      totalPriceStatus: 'FINAL',
+      totalPrice: '123.45',
+      currencyCode: 'USD'
+    };
+
+    const paymentDataRequest = Object.assign({
+      merchantInfo: merchantInfo,
+      transactionInfo: transactionInfo,
+    }, googlePayBaseConfiguration);
+  }
+
+
   function createAndAddButton() {
     const button = googlePayClient.createButton({
       // defaults to black if default or omitted
@@ -59,10 +79,6 @@ function onGooglePayLoaded() {
       onClick: onGooglePaymentsButtonClicked
     });
     document.getElementById('buyNow').appendChild(button);
-  }
-
-  function onGooglePaymentsButtonClicked() {
-    // TODO: Perform transaction
   }
 
   // console.log('googlePayClient', googlePayClient);
