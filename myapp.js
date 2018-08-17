@@ -14,6 +14,34 @@
  * Google Pay API Functionality
  * ====================
  */
+const tokenizationSpecification = {
+  type: 'PAYMENT_GATEWAY',
+  parameters: {
+    gateway: 'example',
+    gatewayMerchantId: 'gatewayMerchantId'
+  }
+};
+
+const cardPaymentMethod = {
+  type: 'CARD',
+  tokenizationSpecification: tokenizationSpecification,
+  parameters: {
+    allowedCardNetworks: ['VISA','MASTERCARD'],
+    allowedAuthMethods: ['PAN_ONLY','CRYPTOGRAM_3DS'],
+    billingAddressRequired: true,
+    billingAddressParameters: {
+      format: 'FULL',
+      phoneNumberRequired: true
+    }
+  }
+};
+
+const googlePayBaseConfiguration = {
+  apiVersion: 2,
+  apiVersionMinor: 0,
+  allowedPaymentMethods: [cardPaymentMethod]
+};
+
 function onGooglePayLoaded() {
   // console.log('onGooglePayLoaded triggered');
   const googlePayClient = new google.payments.api.PaymentsClient({
