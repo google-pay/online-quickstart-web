@@ -3,20 +3,23 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <header>
-      <h1>TODO Header</h1>
-      <nav id="header-nav">
-        <a id="nav-tshirt-male" href="#shop-tshirt-male">Male Shirt</a>
-        <a id="nav-tshirt-female" href="#shop-tshirt-female">Female Shirt</a>
-        <a id="nav-tshirt-any" href="#shop-tshirt-any">Any Shirt</a>
-        <a href="#shop-checkout">DEV: Checkout</a>
-        <a href="#shop-success">DEV: Success</a>
-      </nav>
-      <div id="loading" style="display:none;">
-        <img src="./data/loading.svg" alt="loading" style="opacity: 1; transition: opacity 0.5s;" />
+    <header id="header">
+      <a href="#default" class="logo">A TShirt For You!</a>
+      <div id="header-right">
+        <nav id="header-nav">
+          <a id="nav-tshirt-male" href="#shop-tshirt-male">Male Shirt</a>
+          <a id="nav-tshirt-female" href="#shop-tshirt-female">Female Shirt</a>
+          <a id="nav-tshirt-any" href="#shop-tshirt-any">Any Shirt</a>
+          <a href="#shop-checkout">DEV: Checkout</a>
+          <a href="#shop-success">DEV: Success</a>
+        </nav>
       </div>
-      <div id="shop-error" style="display:none;"></div>
     </header>
+
+    <div id="loading" style="display:none;">
+      <img src="./data/loading.svg" alt="loading" style="opacity: 1; transition: opacity 0.5s;" />
+    </div>
+    <div id="shop-error" style="display:none;"></div>
 
     <div id="content">
 
