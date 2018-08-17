@@ -48,6 +48,18 @@ function onGooglePayLoaded() {
     environment: 'TEST'
   });
   // console.log('googlePayClient', googlePayClient);
+  googlePayClient.isReadyToPay(googlePayBaseConfiguration)
+    .then(function(response) {
+      // console.log('googlePayClient isReadyToPay', response);
+      if(response.result) {
+        // Add Google Pay button – createAndAddButton()
+      }
+    }).catch(function(err) {
+      // Log error.
+      console.error("googlePayClient is unable to pay", err);
+      // Did you get "Google Pay APIs should be called in secure context"?
+      //   you need to be on SSL/TLS (a https:// server)
+    });
 }
 
 
