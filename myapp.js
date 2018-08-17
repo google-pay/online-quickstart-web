@@ -67,6 +67,17 @@ function onGooglePayLoaded() {
       merchantInfo: merchantInfo,
       transactionInfo: transactionInfo,
     }, googlePayBaseConfiguration);
+
+    googlePayClient
+      .loadPaymentData(paymentDataRequest)
+      .then(function(paymentData) {
+        // Process result – processPaymentData(paymentData);
+        console.log('googlePayClient success', paymentData);
+        window.location.hash = '#shop-success';
+      }).catch(function(err) {
+        // Log error: { statusCode: CANCELED || DEVELOPER_ERROR }
+        console.error('googlePayClient transaction failed', err);
+      });
   }
 
 
