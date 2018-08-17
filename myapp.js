@@ -11,6 +11,20 @@
 
 /**
  * ====================
+ * Google Pay API Functionality
+ * ====================
+ */
+function onGooglePayLoaded() {
+  // console.log('onGooglePayLoaded triggered');
+  const googlePayClient = new google.payments.api.PaymentsClient({
+    environment: 'TEST'
+  });
+  // console.log('googlePayClient', googlePayClient);
+}
+
+
+/**
+ * ====================
  * App Functionality
  * ====================
  */

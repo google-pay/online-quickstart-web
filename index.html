@@ -167,5 +167,9 @@
     <!-- including polyfills for older browsers -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
     <script type="text/javascript" src="./myapp.js"></script>
-  </body>
+    <!-- include script for google pay with onload handler -->
+    <script async
+      src="https://pay.google.com/gp/p/js/pay.js"
+      onload="onGooglePayLoaded()">
+    </script>  </body>
 </html>
