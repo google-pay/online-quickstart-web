@@ -175,13 +175,12 @@ shop-select > [prefix] {
   display: none;
 }
 
-shop-button#buyNow > * {
-  width: 100%;
-}
-
-shop-button#addToCart > * {
-  width: 100%;
-  margin-bottom: 4px;
+#buyNow a.btn {
+  display: block;
+  width: 220px;
+  margin: 10px 0;
+  padding: 12px 10px;
+  text-align: center;
 }
 
 #content {
