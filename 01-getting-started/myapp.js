@@ -115,8 +115,17 @@ function uiPageShirt(gender) {
 
 function uiPageLegacyCheckoutForm() {
   domId('shop-tshirt').style.display = 'none';
-  domId('shop-checkout').style.display = 'block';
   domId('shop-success').style.display = 'none';
+  domId('shop-checkout').style.display = 'block';
+  if (domId('shop-checkout').className == "") {
+    domId('shop-checkout').className == "fa-loaded";
+    const link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+    link.crossorigin = "anonymous";
+    domId('shop-checkout').appendChild(link);
+  }
 }
 
 function uiPagePurcahseSuccess() {
@@ -134,6 +143,12 @@ function onHashChange(e) {
   if (hash == '#shop-tshirt-female') return uiPageShirt('female');
   // if (hash == '#shop-tshirt-any') return uiPageShirt('any');
   return uiPageShirt('any');
+}
+
+function onCheckoutSubmit(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  alert("This is a demo, no real checkout built");
+  return false;
 }
 
 // assign UI to page elements
