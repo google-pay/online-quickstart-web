@@ -185,13 +185,11 @@ function onGooglePayLoaded() {
 
   // Determine readiness to pay using Google Pay
   googlePayClient.isReadyToPay(googlePayBaseConfiguration)
-    .then(function(response) {
-      // console.log('googlePayClient isReadyToPay', response);
+    .then(response => {
       if (response.result) {
         createAndAddButton();
       }
-    }).catch(function(err) {
-      // Log error.
+    }).catch(err => {
       console.error("googlePayClient is unable to pay", err);
       // Did you get "Google Pay APIs should be called in secure context"?
       // You need to be on SSL/TLS (a https:// server)
@@ -314,7 +312,5 @@ function initializeUi() {
   handleHashChange();
 }
 
-// when domready, load up our UI functionality
-document.addEventListener("DOMContentLoaded", function(event) {
-  uiInitialize();
-});
+// When the DOM is ready, load up our UI functionality
+document.addEventListener("DOMContentLoaded", event => initializeUi());
