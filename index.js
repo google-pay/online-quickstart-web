@@ -178,7 +178,9 @@ function onGooglePayLoaded() {
       buttonType: 'long',
       onClick: onGooglePaymentsButtonClicked
     });
-    document.getElementById('buy-now').appendChild(googlePayButton);
+
+    googlePayButton.setAttribute('id', 'google-pay-button');
+    domId('buy-now').appendChild(googlePayButton);
   }
 
   // Determine readiness to pay using Google Pay
