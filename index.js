@@ -153,13 +153,14 @@ function onGooglePayLoaded() {
     // Trigger to open the sheet with a list of payments method available
     googlePayClient
       .loadPaymentData(paymentDataRequest)
-      .then(function(paymentData) {
+      .then(paymentData => {
         // Process result – processPaymentData(paymentData);
-        console.log('googlePayClient success', paymentData);
+        console.log('googlePayClient payment load success: ', paymentData);
         window.location.hash = '#shop-success';
-      }).catch(function(err) {
+
+      }).catch(err => {
         // Log error: { statusCode: CANCELED || DEVELOPER_ERROR }
-        console.error('googlePayClient transaction failed', err);
+        console.error('googlePayClient payment load failed: ', err);
       });
   }
 
@@ -191,7 +192,7 @@ function onGooglePayLoaded() {
       // Log error.
       console.error("googlePayClient is unable to pay", err);
       // Did you get "Google Pay APIs should be called in secure context"?
-      //   you need to be on SSL/TLS (a https:// server)
+      // You need to be on SSL/TLS (a https:// server)
     });
 }
 
@@ -223,46 +224,60 @@ function renderSelectedShirt() {
       '$' + Number.parseFloat(selectedShirt.price).toFixed(2);
 }
 
-function uiPageError(msg) {
-  domId('shop-err').style.display = 'block';
-  domId('shop-err').style.display = 'block';
-  domId('shop-checkout').style.display = 'none';
-  domId('shop-success').style.display = 'none';
-  loadShirt(gender);
+function updateModalVisilibity(elementsToShow, elementsToHide) {
+  elementsToShow.forEach(element => domId(element).style.display = 'flex');
+  elementsToHide.forEach(element => domId(element).style.display = 'none');
 }
 
 function uiPageShirt(gender) {
-  domId('shop-tshirt').style.display = 'block';
-  domId('shop-checkout').style.display = 'none';
-  domId('shop-success').style.display = 'none';
-  loadShirt(gender);
+  loadShirtDirectory(gender);
+  updateModalVisilibity(
+      ['shop-tshirt'], ['shop-checkout', 'shop-success']);
 }
 
 function uiPageLegacyCheckoutForm() {
-  domId('shop-tshirt').style.display = 'none';
-  domId('shop-success').style.display = 'none';
-  domId('shop-checkout').style.display = 'block';
+  updateModalVisilibity(
+      ['shop-checkout'], ['shop-tshirt', 'shop-success']);
 
-  if (domId('shop-checkout').className == "") {
-    domId('shop-checkout').className == "fa-loaded";
-    const link = document.createElement("link");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
-    link.crossorigin = "anonymous";
+  if (domId('shop-checkout').className == '') {
+    domId('shop-checkout').className == 'fa-loaded';
+    const link = document.createElement('link');
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    link.crossorigin = 'anonymous';
     domId('shop-checkout').appendChild(link);
   }
 }
 
 function uiPagePurcahseSuccess() {
-  domId('shop-tshirt').style.display = 'none';
-  domId('shop-checkout').style.display = 'none';
-  domId('shop-success').style.display = 'block';
+  updateModalVisilibity(
+      ['shop-success'], ['shop-tshirt', 'shop-checkout']);
 }
 
-function onHashChange(e) {
+function handleHashChange(e) {
   const urlHash = window.location.hash;
-  console.log('onhashchange', urlHash);
+  console.log('Hash changed to: ', urlHash);
+
+  const navElementForHash = {
+    '#shop-tshirt-any': 'nav-tshirt-any',
+    '#shop-tshirt-male': 'nav-tshirt-male',
+    '#shop-tshirt-female': 'nav-tshirt-female'
+  };
+  
+  // Deactivate all first
+  Object.keys(navElementForHash).forEach(key => {
+    domId(navElementForHash[key]).className = '';
+  });
+
+  // Activate based on selected hash
+  if (urlHash in navElementForHash) {
+    domId(navElementForHash[urlHash]).className = 'active';
+  }
+
+  loadTshirtForHash(urlHash);
+}
+
 /**
  * Updates the UI depending on the modal hash included in the URL. This hash
  * is used to either trigger a new load of either male or female t-shirts to
@@ -289,9 +304,12 @@ function onCheckoutSubmit(e) {
  * Takes care of initializing the necessary UI triggers to listen for URL
  * changes that respond to hash changes.
  */
+function initializeUi() {
+  window.addEventListener('hashchange', (e) => handleHashChange(e));
   domId('reload-button').onclick = (e) => loadTshirtForHash(window.location.hash);
 
-  onHashChange(null);
+  // Handle current hash
+  handleHashChange();
 }
 
 // when domready, load up our UI functionality
