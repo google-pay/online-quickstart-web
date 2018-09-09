@@ -15,8 +15,7 @@
  */
 
 body {
-  font: 'Roboto', 'Noto', sans-serif;
-  font-size: 13px;
+  font: 13px 'Roboto', 'Noto', sans-serif;
   line-height: 1.5;
   --app-primary-color: #202020;
   --app-secondary-color: #757575;
@@ -300,24 +299,21 @@ h1 {
 }
 
 #loading {
-    width: 118px;
-    height: 90px;
-    position: fixed;
-    top: 0px;
-    left: 48%;
-    background-position: center center;
+  width: 118px;
+  height: 90px;
+  background-position: center center;
 }
 
 #loading img {
-    max-width: 118px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    margin: auto;
-    text-align: center;
-    vertical-align: middle;
+  max-width: 118px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  margin: auto;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .row {
