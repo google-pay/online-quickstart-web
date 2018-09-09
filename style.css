@@ -62,19 +62,20 @@ img {
 }
 
 #header a {
-  float: left;
-  color: black;
+  color: #555;
   text-align: center;
   padding: 12px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 25px;
   border-radius: 4px;
 }
 
 #header a.logo {
+  color: #777;
   font-size: 25px;
-  font-weight: bold;
+  font-weight: 100;
+  vertical-align: middle;
 }
 
 #header a:hover {
