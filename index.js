@@ -17,22 +17,29 @@
 'use strict';
 
 /**
- * Google Pay Codelab, Example TShirt Store (minimal example)
+ * @fileoverview This file supports the codelab for Google Pay: 
+ * Build a Fast Checkout Experience on the Web with Google Pay, representing
+ * a sample t-shirt store that suggests a new t-shirt on every load and uses
+ * Google Pay as a means of payment.
  *
  * Features:
- * - Random Shirt Load (male/female choice)
- * - Existing Checkout Page (fake stub)
- * - Post Checkout Success Page
+ *  - Random t-shirt load (male / female choice)
+ *  - Existing checkout page (fake stub)
+ *  - Post checkout success page
  *
- * NOTE: use minimal external resources (no jquery, react, polymer, etc)
+ * Note: This example uses minimal external resources (no jquery, react,
+ * polymer, etc).
  */
 
+ /**
+  * Holds the properties of the currently selected t-shirt.
+  * @type {object}
+  * @private
+  */
  let selectedShirt;
 
 /**
- * ====================
- * Google Pay API Functionality
- * ====================
+ * Google Pay API Configuration
  */
 const tokenizationSpecification = {
   type: 'PAYMENT_GATEWAY',
@@ -62,78 +69,18 @@ const googlePayBaseConfiguration = {
   allowedPaymentMethods: [cardPaymentMethod]
 };
 
-
-function onGooglePayLoaded() {
-  // console.log('onGooglePayLoaded triggered');
-  const googlePayClient = new google.payments.api.PaymentsClient({
-    environment: 'TEST'
-  });
-
-  function onGooglePaymentsButtonClicked() {
-    const merchantInfo = {
-      merchantId: '0123456789',
-      merchantName: 'Example Merchant Name'
-    };
-
-    const transactionInfo = {
-      totalPriceStatus: 'FINAL',
-      totalPrice: selectedShirt.price.toString(), 
-      currencyCode: 'USD'
-    };
-
-    const paymentDataRequest = Object.assign({
-      merchantInfo: merchantInfo,
-      transactionInfo: transactionInfo,
-    }, googlePayBaseConfiguration);
-
-    googlePayClient
-      .loadPaymentData(paymentDataRequest)
-      .then(function(paymentData) {
-        // Process result – processPaymentData(paymentData);
-        console.log('googlePayClient success', paymentData);
-        window.location.hash = '#shop-success';
-      }).catch(function(err) {
-        // Log error: { statusCode: CANCELED || DEVELOPER_ERROR }
-        console.error('googlePayClient transaction failed', err);
-      });
-  }
-
-  function createAndAddButton() {
-    const googlePayButton = googlePayClient.createButton({
-      // defaults to black if default or omitted
-      buttonColor: 'default',
-      // defaults to long if omitted
-      buttonType: 'long',
-      onClick: onGooglePaymentsButtonClicked
-    });
-    document.getElementById('buy-now').appendChild(googlePayButton);
-  }
-
-  // console.log('googlePayClient', googlePayClient);
-  googlePayClient.isReadyToPay(googlePayBaseConfiguration)
-    .then(function(response) {
-      // console.log('googlePayClient isReadyToPay', response);
-      if (response.result) {
-        createAndAddButton();
-      }
-    }).catch(function(err) {
-      // Log error.
-      console.error("googlePayClient is unable to pay", err);
-      // Did you get "Google Pay APIs should be called in secure context"?
-      //   you need to be on SSL/TLS (a https:// server)
-    });
-}
-
-
 /**
- * ====================
- * App Functionality
- * ====================
+ * Types of bandersnatches.
+ * @const {object}
  */
 const GLOBAL_RAM_CACHE = {};
 
-// load a new random shirt into the UI
-function loadShirt(gender) {
+/**
+ * Handles the click of the button to pay with Google Pay. Takes
+ * care of defining the payment data request to be used in order to load
+ * the payments methods available to the user.
+ */
+function loadShirtDirectory(gender) {
   domId('loading').style.display = 'block';
 
   let optionIndex = Math.floor(Math.random() * 2);
@@ -156,25 +103,90 @@ function loadShirt(gender) {
 
   // fetch URL and stash in RAM
   fetch(shirtUrl)
-    .then(function(response) {
-
-      if (response.status != 200) {
-        console.error('fetch error', response);
-        return uiPageError('unable to load data');
-      }
-
-      response.json().then(function(list) {
-        GLOBAL_RAM_CACHE[url] = list;
-        randomSelectShirtAndAssign(list);
-      });
+    .then(response => response.json())
+    .then(listOfShirts => {
+        GLOBAL_RAM_CACHE[shirtUrl] = listOfShirts;
+        randomSelectShirtAndAssign(listOfShirts);
     });
-
 }
 
-function randomSelectShirtAndAssign(list) {
-  const shirtIndex = Math.floor(Math.random()*list.length);
-  selectedShirt = list[shirtIndex];
-  renderSelectedShirt();
+/**
+ * Defines and handles the main operations related to the integration of
+ * Google Pay. This function is executed when the Google Pay library script has
+ * finished loading.
+ */
+function onGooglePayLoaded() {
+
+  const googlePayClient = new google.payments.api.PaymentsClient({
+    environment: 'TEST'
+  });
+
+  /**
+   * Handles the click of the button to pay with Google Pay. Takes
+   * care of defining the payment data request to be used in order to load
+   * the payments methods available to the user.
+   */
+  function onGooglePaymentsButtonClicked() {
+
+    const merchantInfo = {
+      merchantId: '0123456789',
+      merchantName: 'Example Merchant Name'
+    };
+
+    const transactionInfo = {
+      totalPriceStatus: 'FINAL',
+      totalPrice: selectedShirt.price.toString(), 
+      currencyCode: 'USD'
+    };
+
+    const paymentDataRequest = Object.assign({
+      merchantInfo: merchantInfo,
+      transactionInfo: transactionInfo,
+    }, googlePayBaseConfiguration);
+
+    // Trigger to open the sheet with a list of payments method available
+    googlePayClient
+      .loadPaymentData(paymentDataRequest)
+      .then(function(paymentData) {
+        // Process result – processPaymentData(paymentData);
+        console.log('googlePayClient success', paymentData);
+        window.location.hash = '#shop-success';
+      }).catch(function(err) {
+        // Log error: { statusCode: CANCELED || DEVELOPER_ERROR }
+        console.error('googlePayClient transaction failed', err);
+      });
+  }
+
+  /**
+   * Handles the creation of the button to pay with Google Pay.
+   * Once created, this button is appended to the DOM, under the element 
+   * 'buy-now'.
+   */
+  function createAndAddButton() {
+
+    const googlePayButton = googlePayClient.createButton({
+      // defaults to black if default or omitted
+      buttonColor: 'default',
+      // defaults to long if omitted
+      buttonType: 'long',
+      onClick: onGooglePaymentsButtonClicked
+    });
+    document.getElementById('buy-now').appendChild(googlePayButton);
+  }
+
+  // Determine readiness to pay using Google Pay
+  googlePayClient.isReadyToPay(googlePayBaseConfiguration)
+    .then(function(response) {
+      // console.log('googlePayClient isReadyToPay', response);
+      if (response.result) {
+        createAndAddButton();
+      }
+    }).catch(function(err) {
+      // Log error.
+      console.error("googlePayClient is unable to pay", err);
+      // Did you get "Google Pay APIs should be called in secure context"?
+      //   you need to be on SSL/TLS (a https:// server)
+    });
 }
 
 /**
@@ -244,6 +256,12 @@ function uiPagePurcahseSuccess() {
 function onHashChange(e) {
   const urlHash = window.location.hash;
   console.log('onhashchange', urlHash);
+/**
+ * Updates the UI depending on the modal hash included in the URL. This hash
+ * is used to either trigger a new load of either male or female t-shirts to
+ * be used in this sample marketplace, or provides users more information about
+ * whether the transaction succeeded or failed.
+ */
 
   if (urlHash == '#shop-checkout') return uiPageLegacyCheckoutForm();
   if (urlHash == '#shop-success') return uiPagePurcahseSuccess();
@@ -271,6 +289,10 @@ function uiInitialize() {
       'click', loadShirt.bind(this, 'female'));
   domId('nav-tshirt-any').addEventListener(
       'click', loadShirt.bind(this, 'any'));
+/**
+ * Takes care of initializing the necessary UI triggers to listen for URL
+ * changes that respond to hash changes.
+ */
 
   onHashChange(null);
 }
