@@ -85,8 +85,33 @@ img {
   color: white;
 }
 
+#header-left {
+  float: left;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+#header-left img {
+  vertical-align: middle;
+}
+
+#reload-button {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#reload-button:hover {
+  background-color: #ddd;
+}
+
 #header-right {
   float: right;
+  margin-right: 15px;
+}
+
+#content {
+  margin-top: 30px;
 }
 
 /* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */

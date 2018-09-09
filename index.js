@@ -110,6 +110,12 @@ function loadShirtDirectory(gender) {
     });
 }
 
+function randomSelectShirtAndAssign(list) {
+  const shirtIndex = Math.floor(Math.random() * list.length);
+  selectedShirt = list[shirtIndex];
+  renderSelectedShirt();
+}
+
 /**
  * Defines and handles the main operations related to the integration of
  * Google Pay. This function is executed when the Google Pay library script has
@@ -205,10 +211,11 @@ function unescapeText(text) {
 }
 
 function renderSelectedShirt() {
-  domId('shop-image').onload = function(e) {
-    // stopping loading only after the t-shirt image is loaded
+  domId('shop-image').onload = e => {
     domId('loading').style.display = 'none';
+    domId('shop-image').style.display = 'block';
   };
+
   domId('shop-image').src = selectedShirt.largeImage;
   domId('shop-title').innerHTML = selectedShirt.title;
   domId('shop-description').innerHTML = unescapeText(selectedShirt.description);
@@ -278,21 +285,11 @@ function onCheckoutSubmit(e) {
   return false;
 }
 
-// assign UI to page elements
-function uiInitialize() {
-  window.addEventListener('hashchange', onHashChange.bind(this));
-
-  // TODO (alanblout): only trigger this click function if hash matches, otherwise we run twice
-  domId('nav-tshirt-male').addEventListener(
-      'click', loadShirt.bind(this, 'male'));
-  domId('nav-tshirt-female').addEventListener(
-      'click', loadShirt.bind(this, 'female'));
-  domId('nav-tshirt-any').addEventListener(
-      'click', loadShirt.bind(this, 'any'));
 /**
  * Takes care of initializing the necessary UI triggers to listen for URL
  * changes that respond to hash changes.
  */
+  domId('reload-button').onclick = (e) => loadTshirtForHash(window.location.hash);
 
   onHashChange(null);
 }
