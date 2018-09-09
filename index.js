@@ -186,26 +186,10 @@ function domId(id) {
   return document.getElementById(id);
 }
 
-function decodeHTMLEntities(text) {
-  let entities = [
-    ['amp', '&'],
-    ['apos', '\''],
-    ['#x27', '\''],
-    ['#x2F', '/'],
-    ['#39', '\''],
-    ['#47', '/'],
-    ['lt', '<'],
-    ['gt', '>'],
-    ['nbsp', ' '],
-    ['quot', '"'],
-  ];
-
-  for (let i = 0, max = entities.length; i < max; ++i) {
-    text = text.replace(
-        new RegExp('&' + entities[i][0] + ';', 'g'), entities[i][1]);
-  }
-
-  return text;
+function unescapeText(text) {
+  let elem = document.createElement('textarea');
+  elem.innerHTML = text;
+  return elem.textContent;
 }
 
 function renderSelectedShirt() {
@@ -215,19 +199,9 @@ function renderSelectedShirt() {
   };
   domId('shop-image').src = selectedShirt.largeImage;
   domId('shop-title').innerHTML = selectedShirt.title;
+  domId('shop-description').innerHTML = unescapeText(selectedShirt.description);
   domId('shop-price').innerHTML =
       '$' + Number.parseFloat(selectedShirt.price).toFixed(2);
-
-  // parse escaped html as a string from json object (DANGER)
-  const parser = new DOMParser();
-  const parsedHtml = parser.parseFromString(
-      decodeHTMLEntities(selectedShirt.description), 'text/html');
-
-  domId('shop-description').innerHTML = (
-    parsedHtml
-    && parsedHtml.body
-    && parsedHtml.body.innerHTML
-  ) || '';
 }
 
 function uiPageError(msg) {
