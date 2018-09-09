@@ -284,14 +284,24 @@ function handleHashChange(e) {
  * be used in this sample marketplace, or provides users more information about
  * whether the transaction succeeded or failed.
  */
+function loadTshirtForHash(hash) {
 
-  if (urlHash == '#shop-checkout') return uiPageLegacyCheckoutForm();
-  if (urlHash == '#shop-success') return uiPagePurcahseSuccess();
-  if (urlHash == '#shop-tshirt-male') return uiPageShirt('male');
-  if (urlHash == '#shop-tshirt-female') return uiPageShirt('female');
-  // if (urlHash == '#shop-tshirt-any') return uiPageShirt('any');
+  switch (hash) {
+    case '#shop-checkout':
+      return uiPageLegacyCheckoutForm();
 
-  return uiPageShirt('any');
+    case '#shop-success':
+      return uiPagePurcahseSuccess();
+
+    case '#shop-tshirt-male':
+      return uiPageShirt('male');
+
+    case '#shop-tshirt-female':
+      return uiPageShirt('female');
+
+    default:
+      return uiPageShirt('any');
+  }
 }
 
 function onCheckoutSubmit(e) {
