@@ -15,12 +15,12 @@
  */
 
 body {
-  font-family: 'Roboto', 'Noto', sans-serif;
+  font: 'Roboto', 'Noto', sans-serif;
   font-size: 13px;
   line-height: 1.5;
   --app-primary-color: #202020;
   --app-secondary-color: #757575;
-  --app-accent-color: #172C50;
+  --app-accent-color: #172c50;
   --paper-button-ink-color: var(--app-accent-color);
   --paper-icon-button-ink-color: var(--app-accent-color);
   --paper-spinner-color: var(--app-accent-color);
@@ -40,7 +40,7 @@ img {
   max-height: 100%;
   margin: 0 auto;
   opacity: 0;
-  transition: 0.5s opacity;
+  transition: .5s opacity;
   position: var(--shop-image-img_-_position, var(--layout-fit_-_position));
   top: var(--shop-image-img_-_top, var(--layout-fit_-_top));
   bottom: var(--shop-image-img_-_bottom, var(--layout-fit_-_bottom));
@@ -84,6 +84,7 @@ img {
   background-color: dodgerblue;
   color: white;
 }
+
 #header-right {
   float: right;
 }
@@ -115,10 +116,10 @@ shop-select > shop-md-decorator {
 }
 
 shop-select > shop-md-decorator::after {
-  content: '\25BC';
+  content: '\25bc';
   display: block;
   position: absolute;
-  bottom: calc(50% - 0.75em);
+  bottom: calc(50% - .75em);
   right: 8px;
   speak: none;
   -webkit-transform: scaleY(.6);
@@ -158,15 +159,15 @@ shop-select > shop-md-decorator > shop-underline {
   margin: auto;
   -webkit-transform: scale3d(0, 1, 1);
   transform: scale3d(0, 1, 1);
-  transition: -webkit-transform 0.2s ease-in;
-  transition: transform 0.2s ease-in;
+  transition: -webkit-transform .2s ease-in;
+  transition: transform .2s ease-in;
 }
 
 shop-select > select:focus + shop-md-decorator > shop-underline {
   -webkit-transform: scale3d(1, 1, 1);
   transform: scale3d(1, 1, 1);
-  transition: -webkit-transform 0.2s ease-out;
-  transition: transform 0.2s ease-out;
+  transition: -webkit-transform .2s ease-out;
+  transition: transform .2s ease-out;
 }
 
 shop-select > select:focus + shop-md-decorator::before, shop-select > select:focus + shop-md-decorator::after, shop-select > select:focus {
@@ -187,11 +188,11 @@ shop-select > [prefix] {
   pointer-events: none;
 }
 
-#buyNow:not([visible]) {
+#buy-now:not([visible]) {
   display: none;
 }
 
-#buyNow a.btn {
+#buy-now a.btn {
   display: block;
   width: 220px;
   margin: 10px 0;
@@ -223,7 +224,7 @@ shop-select > [prefix] {
 }
 
 #shop-image::before {
-  content: "";
+  content: '';
   display: block;
   padding-top: 100%;
 }
@@ -232,7 +233,7 @@ shop-select > [prefix] {
   margin: 64px 32px;
   width: 50%;
   max-width: 400px;
-  transition: opacity 0.4s;
+  transition: opacity .4s;
   opacity: 0;
 }
 
@@ -281,6 +282,7 @@ h1 {
     left: 48%;
     background-position: center center;
 }
+
 #loading img {
     max-width: 118px;
     position: absolute;
@@ -292,9 +294,6 @@ h1 {
     text-align: center;
     vertical-align: middle;
 }
-
-
-
 
 .row {
   display: -ms-flexbox; /* IE10 */
@@ -353,7 +352,7 @@ label {
 }
 
 .btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 12px;
   margin: 10px 0;
@@ -372,8 +371,6 @@ span.price {
   float: right;
   color: grey;
 }
-
-
 
 @media (max-width: 767px) {
 
@@ -413,12 +410,12 @@ span.price {
     margin: 12px 0 32px;
   }
 
-  #buyNow {
+  #buy-now {
     right: 0;
     left: 50%
   }
 
-  shop-button[responsive]#buyNow > * {
+  shop-button[responsive]#buy-now > * {
     background-color: var(--app-secondary-color);
   }
 }

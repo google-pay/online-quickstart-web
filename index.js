@@ -27,6 +27,8 @@
  * NOTE: use minimal external resources (no jquery, react, polymer, etc)
  */
 
+ let selectedShirt;
+
 /**
  * ====================
  * Google Pay API Functionality
@@ -73,10 +75,9 @@ function onGooglePayLoaded() {
       merchantName: 'Example Merchant Name'
     };
 
-    // TODO: get the price from the tshirt data
     const transactionInfo = {
       totalPriceStatus: 'FINAL',
-      totalPrice: '123.45',
+      totalPrice: selectedShirt.price.toString(), 
       currencyCode: 'USD'
     };
 
@@ -97,23 +98,22 @@ function onGooglePayLoaded() {
       });
   }
 
-
   function createAndAddButton() {
-    const button = googlePayClient.createButton({
+    const googlePayButton = googlePayClient.createButton({
       // defaults to black if default or omitted
       buttonColor: 'default',
       // defaults to long if omitted
       buttonType: 'long',
       onClick: onGooglePaymentsButtonClicked
     });
-    document.getElementById('buyNow').appendChild(button);
+    document.getElementById('buy-now').appendChild(googlePayButton);
   }
 
   // console.log('googlePayClient', googlePayClient);
   googlePayClient.isReadyToPay(googlePayBaseConfiguration)
     .then(function(response) {
       // console.log('googlePayClient isReadyToPay', response);
-      if(response.result) {
+      if (response.result) {
         createAndAddButton();
       }
     }).catch(function(err) {
@@ -135,26 +135,34 @@ const GLOBAL_RAM_CACHE = {};
 // load a new random shirt into the UI
 function loadShirt(gender) {
   domId('loading').style.display = 'block';
-  const options = ['./data/ladies_tshirts.json', './data/mens_tshirts.json'];
-  let optionIndex = Math.floor(Math.random()*2);
+
+  let optionIndex = Math.floor(Math.random() * 2);
+  const shirtOptions = [
+      './data/ladies_tshirts.json', './data/mens_tshirts.json'];
+
   if (gender == 'female') {
     optionIndex = 0;
   } else if (gender == 'male') {
     optionIndex = 1;
   }
-  const url = options[optionIndex];
+
+  const shirtUrl = shirtOptions[optionIndex];
+
   // if we already fetched, it is in RAM.
   // (in the real world, this might not be the design)
-  if (GLOBAL_RAM_CACHE[url]) {
-    return randomSelectShirtAndAssign(GLOBAL_RAM_CACHE[url]);
+  if (GLOBAL_RAM_CACHE[shirtUrl]) {
+    return randomSelectShirtAndAssign(GLOBAL_RAM_CACHE[shirtUrl]);
   }
+
   // fetch URL and stash in RAM
-  fetch(url)
+  fetch(shirtUrl)
     .then(function(response) {
+
       if (response.status != 200) {
         console.error('fetch error', response);
         return uiPageError('unable to load data');
       }
+
       response.json().then(function(list) {
         GLOBAL_RAM_CACHE[url] = list;
         randomSelectShirtAndAssign(list);
@@ -165,8 +173,8 @@ function loadShirt(gender) {
 
 function randomSelectShirtAndAssign(list) {
   const shirtIndex = Math.floor(Math.random()*list.length);
-  const shirt = list[shirtIndex];
-  uiAssignShirt(shirt);
+  selectedShirt = list[shirtIndex];
+  renderSelectedShirt();
 }
 
 /**
@@ -179,7 +187,7 @@ function domId(id) {
 }
 
 function decodeHTMLEntities(text) {
-  var entities = [
+  let entities = [
     ['amp', '&'],
     ['apos', '\''],
     ['#x27', '\''],
@@ -189,25 +197,32 @@ function decodeHTMLEntities(text) {
     ['lt', '<'],
     ['gt', '>'],
     ['nbsp', ' '],
-    ['quot', '"']
+    ['quot', '"'],
   ];
-  for (var i = 0, max = entities.length; i < max; ++i) {
-    text = text.replace(new RegExp('&'+entities[i][0]+';', 'g'), entities[i][1]);
+
+  for (let i = 0, max = entities.length; i < max; ++i) {
+    text = text.replace(
+        new RegExp('&' + entities[i][0] + ';', 'g'), entities[i][1]);
   }
+
   return text;
 }
 
-function uiAssignShirt(shirt) {
+function renderSelectedShirt() {
   domId('shop-image').onload = function(e) {
     // stopping loading only after the t-shirt image is loaded
     domId('loading').style.display = 'none';
   };
-  domId('shop-image').src = shirt.largeImage;
-  domId('shop-price').innerHTML = '$' + Number.parseFloat(shirt.price).toFixed(2);
-  domId('shop-title').innerHTML = shirt.title;
+  domId('shop-image').src = selectedShirt.largeImage;
+  domId('shop-title').innerHTML = selectedShirt.title;
+  domId('shop-price').innerHTML =
+      '$' + Number.parseFloat(selectedShirt.price).toFixed(2);
+
   // parse escaped html as a string from json object (DANGER)
   const parser = new DOMParser();
-  const parsedHtml = parser.parseFromString(decodeHTMLEntities(shirt.description), 'text/html');
+  const parsedHtml = parser.parseFromString(
+      decodeHTMLEntities(selectedShirt.description), 'text/html');
+
   domId('shop-description').innerHTML = (
     parsedHtml
     && parsedHtml.body
@@ -222,6 +237,7 @@ function uiPageError(msg) {
   domId('shop-success').style.display = 'none';
   loadShirt(gender);
 }
+
 function uiPageShirt(gender) {
   domId('shop-tshirt').style.display = 'block';
   domId('shop-checkout').style.display = 'none';
@@ -233,6 +249,7 @@ function uiPageLegacyCheckoutForm() {
   domId('shop-tshirt').style.display = 'none';
   domId('shop-success').style.display = 'none';
   domId('shop-checkout').style.display = 'block';
+
   if (domId('shop-checkout').className == "") {
     domId('shop-checkout').className == "fa-loaded";
     const link = document.createElement("link");
@@ -251,13 +268,15 @@ function uiPagePurcahseSuccess() {
 }
 
 function onHashChange(e) {
-  const hash = window.location.hash;
-  console.log('onhashchange', hash);
-  if (hash == '#shop-checkout') return uiPageLegacyCheckoutForm();
-  if (hash == '#shop-success') return uiPagePurcahseSuccess();
-  if (hash == '#shop-tshirt-male') return uiPageShirt('male');
-  if (hash == '#shop-tshirt-female') return uiPageShirt('female');
-  // if (hash == '#shop-tshirt-any') return uiPageShirt('any');
+  const urlHash = window.location.hash;
+  console.log('onhashchange', urlHash);
+
+  if (urlHash == '#shop-checkout') return uiPageLegacyCheckoutForm();
+  if (urlHash == '#shop-success') return uiPagePurcahseSuccess();
+  if (urlHash == '#shop-tshirt-male') return uiPageShirt('male');
+  if (urlHash == '#shop-tshirt-female') return uiPageShirt('female');
+  // if (urlHash == '#shop-tshirt-any') return uiPageShirt('any');
+
   return uiPageShirt('any');
 }
 
@@ -270,10 +289,15 @@ function onCheckoutSubmit(e) {
 // assign UI to page elements
 function uiInitialize() {
   window.addEventListener('hashchange', onHashChange.bind(this));
-  // TODO only trigger this click function if hash matches, otherwise we run twice
-  domId('nav-tshirt-male').addEventListener('click', loadShirt.bind(this, 'male'));
-  domId('nav-tshirt-female').addEventListener('click', loadShirt.bind(this, 'female'));
-  domId('nav-tshirt-any').addEventListener('click', loadShirt.bind(this, 'any'));
+
+  // TODO (alanblout): only trigger this click function if hash matches, otherwise we run twice
+  domId('nav-tshirt-male').addEventListener(
+      'click', loadShirt.bind(this, 'male'));
+  domId('nav-tshirt-female').addEventListener(
+      'click', loadShirt.bind(this, 'female'));
+  domId('nav-tshirt-any').addEventListener(
+      'click', loadShirt.bind(this, 'any'));
+
   onHashChange(null);
 }
 
