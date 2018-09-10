@@ -31,12 +31,12 @@
  * polymer, etc).
  */
 
- /**
-  * Holds the properties of the currently selected t-shirt.
-  * @type {object}
-  * @private
-  */
- let selectedShirt;
+/**
+ * Holds the properties of the currently selected t-shirt.
+ * @type {object}
+ * @private
+ */
+let selectedShirt;
 
 /**
  * Google Pay API Configuration
@@ -68,53 +68,6 @@ const googlePayBaseConfiguration = {
   apiVersionMinor: 0,
   allowedPaymentMethods: [cardPaymentMethod]
 };
-
-/**
- * Types of bandersnatches.
- * @const {object}
- */
-const GLOBAL_RAM_CACHE = {};
-
-/**
- * Handles the click of the button to pay with Google Pay. Takes
- * care of defining the payment data request to be used in order to load
- * the payments methods available to the user.
- */
-function loadShirtDirectory(gender) {
-  domId('loading').style.display = 'block';
-
-  let optionIndex = Math.floor(Math.random() * 2);
-  const shirtOptions = [
-      './data/ladies_tshirts.json', './data/mens_tshirts.json'];
-
-  if (gender == 'female') {
-    optionIndex = 0;
-  } else if (gender == 'male') {
-    optionIndex = 1;
-  }
-
-  const shirtUrl = shirtOptions[optionIndex];
-
-  // if we already fetched, it is in RAM.
-  // (in the real world, this might not be the design)
-  if (GLOBAL_RAM_CACHE[shirtUrl]) {
-    return randomSelectShirtAndAssign(GLOBAL_RAM_CACHE[shirtUrl]);
-  }
-
-  // fetch URL and stash in RAM
-  fetch(shirtUrl)
-    .then(response => response.json())
-    .then(listOfShirts => {
-        GLOBAL_RAM_CACHE[shirtUrl] = listOfShirts;
-        randomSelectShirtAndAssign(listOfShirts);
-    });
-}
-
-function randomSelectShirtAndAssign(list) {
-  const shirtIndex = Math.floor(Math.random() * list.length);
-  selectedShirt = list[shirtIndex];
-  renderSelectedShirt();
-}
 
 /**
  * Defines and handles the main operations related to the integration of
@@ -197,21 +150,87 @@ function onGooglePayLoaded() {
 }
 
 /**
- * ====================
- * App UI
- * ====================
+ * Local cache.
+ * @const {object}
+ */
+const GLOBAL_RAM_CACHE = {};
+
+/**
+ * Directories from where to get the list of available t-shirts.
+ * @const {array}
+ */
+const SHIRT_OPTIONS = [
+  './data/ladies_tshirts.json', './data/mens_tshirts.json'];
+
+/**
+ * Takes care of loading the t-shirt directory from the files attached, or
+ * fetches it from the cache if it was previously loaded.
+ * @param  {?string} gender of the t-shirt directory to look into.
+ */
+function loadShirtDirectory(gender) {
+  domId('loading').style.display = 'block';
+
+  // Preset to random value if male or female were not explicitly defined
+  let maleFemaleIndex = Math.floor(Math.random() * 2);
+  if (gender === 'female') {
+    maleFemaleIndex = 0;
+  } else if (gender === 'male') {
+    maleFemaleIndex = 1;
+  }
+
+  // Determine whether the t-shirt is taken from the male or female list
+  const shirtUrl = SHIRT_OPTIONS[maleFemaleIndex];
+
+  // If the date is already in RAM, take it from there.
+  if (GLOBAL_RAM_CACHE[shirtUrl]) {
+    return randomSelectShirtAndAssign(GLOBAL_RAM_CACHE[shirtUrl]);
+  }
+
+  // Fetch URL and stash in RAM
+  fetch(shirtUrl)
+    .then(response => response.json())
+    .then(listOfShirts => {
+        GLOBAL_RAM_CACHE[shirtUrl] = listOfShirts;
+        randomlySelectShirtAndAssign(listOfShirts);
+    });
+}
+
+/**
+ * Selects a random t-shirt from the list passed in.
+ * @param  {!array} list of t-shirts from where to select one.
+ */
+function randomlySelectShirtAndAssign(list) {
+  const shirtIndex = Math.floor(Math.random() * list.length);
+  selectedShirt = list[shirtIndex];
+  renderShirt(selectedShirt);
+}
+
+/**
+ * Helper function to fetch an element inside of the DOM using its id.
+ * @param {!string} id of the element to retrieve.
+ * @return {object} The retrieved element.
  */
 function domId(id) {
   return document.getElementById(id);
 }
 
+/**
+ * Helper function to unescape the text loaded from the directory.
+ * @param {!string} text to unescape.
+ * @return {string} The resulting text.
+ */
 function unescapeText(text) {
   let elem = document.createElement('textarea');
   elem.innerHTML = text;
   return elem.textContent;
 }
 
-function renderSelectedShirt() {
+/**
+ * Takes the currently selected t-shirt and fetches the different properties
+ * of interest to be rendered in the detail view of the site.
+ * @param {!object} shirt to render.
+ */
+function renderShirt(shirt) {
   domId('shop-image').onload = e => {
     domId('loading').style.display = 'none';
     domId('shop-image').style.display = 'block';
@@ -224,37 +243,55 @@ function renderSelectedShirt() {
       '$' + Number.parseFloat(selectedShirt.price).toFixed(2);
 }
 
+/**
+ * Helper function to determine what layers to hide and show based on the state
+ * of the view.
+ * @param {!array} elementsToShow List holding elements that need to be shown.
+ * @param {!array} elementsToHide List holding elements that needs to be hidden.
+ */
 function updateModalVisilibity(elementsToShow, elementsToHide) {
   elementsToShow.forEach(element => domId(element).style.display = 'flex');
   elementsToHide.forEach(element => domId(element).style.display = 'none');
 }
 
+/**
+ * Presents the t-shirt detail view UI.
+ * @param {!string} gender to be used to load the t-shirt directory.
+ */
 function uiPageShirt(gender) {
   loadShirtDirectory(gender);
   updateModalVisilibity(
       ['shop-tshirt'], ['shop-checkout', 'shop-success']);
 }
 
+/**
+ * Presents the legacy checkout form.
+ */
 function uiPageLegacyCheckoutForm() {
   updateModalVisilibity(
       ['shop-checkout'], ['shop-tshirt', 'shop-success']);
 
-  if (domId('shop-checkout').className == '') {
-    domId('shop-checkout').className == 'fa-loaded';
-    const link = document.createElement('link');
-    link.type = 'text/css';
-    link.rel = 'stylesheet';
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-    link.crossorigin = 'anonymous';
+  if (domId('shop-checkout').className === '') {
+    domId('shop-checkout').className = 'fa-loaded';
+
+    const link = loadCssLink('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
     domId('shop-checkout').appendChild(link);
   }
 }
 
+/**
+ * Presents the UI that determines success of the transaction.
+ */
 function uiPagePurcahseSuccess() {
   updateModalVisilibity(
       ['shop-success'], ['shop-tshirt', 'shop-checkout']);
 }
 
+/**
+ * Handles changes on the URL hash, updates the state of the section buttons
+ * and loads a t-shirt according to the option passed in the URL.
+ * @param {?object} e Event accompanying the interaction.
+ */
 function handleHashChange(e) {
   const urlHash = window.location.hash;
   console.log('Hash changed to: ', urlHash);
@@ -279,10 +316,27 @@ function handleHashChange(e) {
 }
 
 /**
+ * Loads a CSS link using the url specified.
+ * @param {!string} url pointing to the resource to load.
+ * @return {object} The newly created link.
+ */
+function loadCssLink(url) {
+  const link = document.createElement('link');
+  link.type = 'text/css';
+  link.rel = 'stylesheet';
+  link.href = url;
+  link.crossorigin = 'anonymous';
+
+  return link;
+}
+
+/**
  * Updates the UI depending on the modal hash included in the URL. This hash
  * is used to either trigger a new load of either male or female t-shirts to
  * be used in this sample marketplace, or provides users more information about
  * whether the transaction succeeded or failed.
+ * @param {?string} hash containing the section in the UI to navigate towards.
+ * @return {undefined}
  */
 function loadTshirtForHash(hash) {
 
@@ -304,6 +358,11 @@ function loadTshirtForHash(hash) {
   }
 }
 
+/**
+ * Simulates a reaction to the submission of the legacy form.
+ * @param {object} e Resulting event from the interaction. 
+ * @return {boolan} Contains the result of the action.
+ */
 function onCheckoutSubmit(e) {
   if (e && e.stopPropagation) e.stopPropagation();
   alert("This is a demo, no real checkout built");
@@ -323,4 +382,4 @@ function initializeUi() {
 }
 
 // When the DOM is ready, load up our UI functionality
-document.addEventListener("DOMContentLoaded", event => initializeUi());
+document.addEventListener("DOMContentLoaded", initializeUi);
