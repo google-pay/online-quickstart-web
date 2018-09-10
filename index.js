@@ -88,7 +88,7 @@ function onGooglePayLoaded() {
   function onGooglePaymentsButtonClicked() {
 
     const merchantInfo = {
-      merchantId: '0123456789',
+      merchantId: '01234567890123456789',
       merchantName: 'Example Merchant Name'
     };
 
