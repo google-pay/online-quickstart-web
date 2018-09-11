@@ -106,14 +106,14 @@ function onGooglePayLoaded() {
     // Trigger to open the sheet with a list of payments method available
     googlePayClient
       .loadPaymentData(paymentDataRequest)
-      .then(paymentData => {
+      .then(function(paymentData) {
         // Process result – processPaymentData(paymentData);
-        console.log('googlePayClient payment load success: ', paymentData);
+        console.info('googlePayClient payment load success: ', paymentData);
         window.location.hash = '#shop-success';
 
-      }).catch(err => {
+      }).catch(function(error) {
         // Log error: { statusCode: CANCELED || DEVELOPER_ERROR }
-        console.error('googlePayClient payment load failed: ', err);
+        console.error('googlePayClient payment load failed: ', error);
       });
   }
 
@@ -138,12 +138,12 @@ function onGooglePayLoaded() {
 
   // Determine readiness to pay using Google Pay
   googlePayClient.isReadyToPay(googlePayBaseConfiguration)
-    .then(response => {
+    .then(function(response) {
       if (response.result) {
         createAndAddButton();
       }
-    }).catch(err => {
-      console.error("googlePayClient is unable to pay", err);
+    }).catch(function(error) {
+      console.error("googlePayClient is unable to pay", error);
       // Did you get "Google Pay APIs should be called in secure context"?
       // You need to be on SSL/TLS (a https:// server)
     });
@@ -188,8 +188,10 @@ function loadShirtDirectory(gender) {
 
   // Fetch URL and stash in RAM
   fetch(shirtUrl)
-    .then(response => response.json())
-    .then(listOfShirts => {
+    .then(function(response) { 
+      return response.json()
+    })
+    .then(function(listOfShirts) {
         GLOBAL_RAM_CACHE[shirtUrl] = listOfShirts;
         randomlySelectShirtAndAssign(listOfShirts);
     });
@@ -231,7 +233,7 @@ function unescapeText(text) {
  * @param {!object} shirt to render.
  */
 function renderShirt(shirt) {
-  domId('shop-image').onload = e => {
+  domId('shop-image').onload = function(e) {
     domId('loading').style.display = 'none';
     domId('shop-image').style.display = 'block';
   };
@@ -250,8 +252,12 @@ function renderShirt(shirt) {
  * @param {!array} elementsToHide List holding elements that needs to be hidden.
  */
 function updateModalVisilibity(elementsToShow, elementsToHide) {
-  elementsToShow.forEach(element => domId(element).style.display = 'flex');
-  elementsToHide.forEach(element => domId(element).style.display = 'none');
+  elementsToShow.forEach(function(element) { 
+    domId(element).style.display = 'flex';
+  });
+  elementsToHide.forEach(function(element) {
+    domId(element).style.display = 'none';
+  }); 
 }
 
 /**
@@ -303,7 +309,7 @@ function handleHashChange(e) {
   };
   
   // Deactivate all first
-  Object.keys(navElementForHash).forEach(key => {
+  Object.keys(navElementForHash).forEach(function(key) {
     domId(navElementForHash[key]).className = '';
   });
 
@@ -374,8 +380,12 @@ function onCheckoutSubmit(e) {
  * changes that respond to hash changes.
  */
 function initializeUi() {
-  window.addEventListener('hashchange', (e) => handleHashChange(e));
-  domId('reload-button').onclick = (e) => loadTshirtForHash(window.location.hash);
+  window.addEventListener('hashchange', function(e) {
+    handleHashChange(e);
+  });
+  domId('reload-button').onclick = function(e) {
+    loadTshirtForHash(window.location.hash);
+  }
 
   // Handle current hash
   handleHashChange();
