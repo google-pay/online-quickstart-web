@@ -183,7 +183,7 @@ function loadShirtDirectory(gender) {
 
   // If the date is already in RAM, take it from there.
   if (GLOBAL_RAM_CACHE[shirtUrl]) {
-    return randomSelectShirtAndAssign(GLOBAL_RAM_CACHE[shirtUrl]);
+    return randomlySelectShirtAndAssign(GLOBAL_RAM_CACHE[shirtUrl]);
   }
 
   // Fetch URL and stash in RAM
@@ -288,7 +288,7 @@ function uiPageLegacyCheckoutForm() {
 /**
  * Presents the UI that determines success of the transaction.
  */
-function uiPagePurcahseSuccess() {
+function uiPagePurchaseSuccess() {
   updateModalVisilibity(
       ['shop-success'], ['shop-tshirt', 'shop-checkout']);
 }
@@ -351,7 +351,7 @@ function loadTshirtForHash(hash) {
       return uiPageLegacyCheckoutForm();
 
     case '#shop-success':
-      return uiPagePurcahseSuccess();
+      return uiPagePurchaseSuccess();
 
     case '#shop-tshirt-male':
       return uiPageShirt('male');
