@@ -168,6 +168,9 @@ const SHIRT_OPTIONS = [
  * @param  {?string} gender of the t-shirt directory to look into.
  */
 function loadShirtDirectory(gender) {
+  
+  // Show loading indicator and hide shirt while list loads
+  domId('shop-image').style.display = 'none';
   domId('loading').style.display = 'block';
 
   // Preset to random value if male or female were not explicitly defined
