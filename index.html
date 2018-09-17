@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 
 <!--
  Copyright 2018 Google Inc. All Rights Reserved.
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
       http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,10 +20,18 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css">
+    <title>Auto T-Shirt Shop</title>
   </head>
   <body>
     <header id="header">
-      <a href="#default" class="logo">A TShirt For You!</a>
+      <div id="header-left">
+        <a href="#shop-tshirt-any" class="logo">Auto T-Shirt Shop</a>
+        <img
+            id="reload-button"
+            src="data/refresh.svg"
+            alt="reload"
+            style="opacity: 1; transition: opacity 0.5s;" />
+      </div>
       <div id="header-right">
         <nav id="header-nav">
           <a id="nav-tshirt-male" href="#shop-tshirt-male">Male Shirt</a>
@@ -32,33 +41,36 @@
       </div>
     </header>
 
-    <div id="loading" style="display:none;">
-      <img src="./data/loading.svg" alt="loading" style="opacity: 1; transition: opacity 0.5s;" />
-    </div>
-    <div id="shop-error" style="display:none;"></div>
-
     <div id="content">
-
       <div id="shop-tshirt">
         <div id="shop-image-container">
-          <img id="shop-image" alt="Inbox - Subtle Actions T-Shirt" src="./data/images/10-13256A.jpg" style="opacity: 1; transition: opacity 0.5s;">
+          <div id="loading" style="display:none;">
+            <img
+                src="data/loading.svg"
+                alt="loading"
+                style="opacity: 1; transition: opacity 0.5s;" />
+          </div>
+          <img
+              id="shop-image"
+              alt="t-shirt image"
+              style="opacity: 1; transition: opacity 0.5s; display:none;">
         </div>
 
         <div class="detail" has-content="">
 
-          <h1 id="shop-title">Inbox - Subtle Actions T-Shirt</h1>
-          <div class="price" id="shop-price">$17.05</div>
+          <h1 id="shop-title">...</h1>
+          <div class="price" id="shop-price">$</div>
           <div class="pickers">
 
             <!-- Size selector -->
             <shop-select>
-              <label id="sizeLabel" prefix="">Size</label>
-              <select id="sizeSelect" aria-labelledby="sizeLabel">
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M" selected="">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
+              <label id="size-label" prefix="">Size</label>
+              <select id="size-select" aria-labelledby="size-label">
+                <option value="xs">XS</option>
+                <option value="s">S</option>
+                <option value="m" selected="">M</option>
+                <option value="l">L</option>
+                <option value="xl">XL</option>
               </select>
               <shop-md-decorator aria-hidden="true">
                 <shop-underline></shop-underline>
@@ -67,8 +79,8 @@
 
             <!-- Quantity selector -->
             <shop-select>
-              <label id="quantityLabel" prefix="">Quantity</label>
-              <select id="quantitySelect" aria-labelledby="quantityLabel">
+              <label id="quantity-label" prefix="">Quantity</label>
+              <select id="quantity-select" aria-labelledby="quantity-label">
                 <option value="1" selected="">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -87,18 +99,14 @@
             <div id="shop-description"></div>
           </div>
 
-          <div id="buyButtons">
-            <div responsive="" id="buyNow" visible="">
+          <div id="buy-buttons">
+            <div responsive="" id="buy-now" visible="">
               <a href="#shop-checkout" class="btn">Buy Now</a>
             </div>
           </div>
 
         </div>
       </div><!--/#shop-tshirt-->
-
-
-
-
 
       <div id="shop-checkout" style="display:none;">
         <div class="container">
@@ -165,9 +173,6 @@
         </div>
       </div><!--/#shop-checkout-->
 
-
-
-
       <div id="shop-success" style="display:none;">
         <h1>Success</h1>
         <p>Thank you for buying a shirt.</p>
@@ -178,14 +183,16 @@
           <a href="#shop-tshirt-any">Any Shirt</a>
         </p>
       </div><!--/#shop-successful-purchase-->
+
     </div><!--/#content-->
 
     <!-- including polyfills for older browsers -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-    <script type="text/javascript" src="./myapp.js"></script>
+    <script src="index.js"></script>
     <!-- include script for google pay with onload handler -->
     <script async
       src="https://pay.google.com/gp/p/js/pay.js"
       onload="onGooglePayLoaded()">
-    </script>  </body>
+    </script>
+  </body>
 </html>

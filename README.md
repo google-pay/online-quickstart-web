@@ -1,22 +1,7 @@
-# Google Pay Simple Web Checkout Demo
+# Google Pay Web Checkout Playground
 
-This is a simple playground to experiment with content for the codelab...
+Use this playground environment to experiment integrating Google Pay, as if you were working directly from your own checkout page.
 
-Legit work will evolve into other folders and playground may die off in favor of branching.
+Google Pay is loaded from your `index.html` file, and once completed, the function `onGooglePayLoaded` in the `index.js` file is called. This is your stating point to integrate Google Pay in this playground.
 
-## Local Development
-
-We will be working with static files, so you don't need a local webserver,
-but if you would like to use one *(for live-reload on file changes)* feel free.
-
-One a simple option is [devd](https://github.com/cortesi/devd)
-which is easy to
-[install on most OSes](https://github.com/cortesi/devd/releases/tag/v0.8)
-*(download and move into your `$PATH`)*.
-
-Then it's as simple as:
-
-```sh
-$ cd pathto/00-sandbox
-$ devd -ol .
-```
+If you are interested to find out more, go check out a basic [guided tutorial](https://developers.google.com/pay/api/web/guides/tutorial) on how to integrate Google Pay API on the web, the [library reference](https://developers.google.com/pay/api/web/reference/object) and the [list of participating processors](https://developers.google.com/pay/api/web/#participating-google-pay-processors).
