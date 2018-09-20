@@ -104,6 +104,14 @@ function createAndAddButton() {
  */
 function onGooglePaymentsButtonClicked() {
 
+  const tokenizationSpecification = {
+    type: 'PAYMENT_GATEWAY',
+    parameters: {
+      gateway: 'example',
+      gatewayMerchantId: 'gatewayMerchantId'
+    }
+  };
+
   const merchantInfo = {
     merchantId: '01234567890123456789',
     merchantName: 'Example Merchant Name'
@@ -116,29 +124,22 @@ function onGooglePaymentsButtonClicked() {
   };
 
   // Use a card payment method including all relevant properties
-  const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod);
+  const cardPaymentMethod = Object.assign({
+    tokenizationSpecification: tokenizationSpecification
+  }, baseCardPaymentMethod);
+
   cardPaymentMethod.parameters.billingAddressRequired = true;
   cardPaymentMethod.parameters.billingAddressParameters = {
     format: 'FULL',
     phoneNumberRequired: true
   };
 
-  cardPaymentMethod.tokenizationSpecification = {
-    type: 'PAYMENT_GATEWAY',
-    parameters: {
-      gateway: 'example',
-      gatewayMerchantId: 'gatewayMerchantId'
-    }
-  };
-
-  const googlePayConfiguration =
-      Object.assign({}, googlePayBaseConfiguration);
-  googlePayConfiguration.allowedPaymentMethods = [cardPaymentMethod];
-
-  const paymentDataRequest = Object.assign({
+  // Add the card, merchant and transaction info needed to perform the request
+  const paymentDataRequest = Object.assign({}, googlePayBaseConfiguration, {
+    allowedPaymentMethods: [cardPaymentMethod],
     merchantInfo: merchantInfo,
     transactionInfo: transactionInfo,
-  }, googlePayConfiguration);
+  });
 
   // Trigger to open the sheet with a list of payments method available
   googlePayClient
