@@ -137,8 +137,8 @@ function onGooglePaymentsButtonClicked() {
   // Add the card, merchant and transaction info needed to perform the request
   const paymentDataRequest = Object.assign({}, googlePayBaseConfiguration, {
     allowedPaymentMethods: [cardPaymentMethod],
-    merchantInfo: merchantInfo,
     transactionInfo: transactionInfo,
+    merchantInfo: merchantInfo
   });
 
   // Trigger to open the sheet with a list of payments method available
