@@ -271,6 +271,16 @@ function onCheckoutSubmit(e) {
  * changes that respond to hash changes.
  */
 function initializeUi() {
+  if (location.protocol !== 'https:') {
+    // Are you developing this locally?
+    // If you want an easy self-signed server try
+    // https://github.com/cortesi/devd
+    // $ devd -sol .
+    const error = 'This page must be loaded over https';
+    console.error(error);
+    domId('shop-tshirt').innerHTML = error;
+    throw error;
+  }
   window.addEventListener('hashchange', function(e) {
     handleHashChange(e);
   });
