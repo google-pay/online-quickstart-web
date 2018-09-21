@@ -17,7 +17,7 @@
 'use strict';
 
 /**
- * @fileoverview This file supports the codelab for Google Pay: 
+ * @fileoverview This file supports the codelab for Google Pay:
  * Build a Fast Checkout Experience on the Web with Google Pay, representing
  * a sample t-shirt store that suggests a new t-shirt on every load and uses
  * Google Pay as a means of payment.
@@ -29,14 +29,14 @@
 /**
  * Google Pay API Configuration
  */
-const allowedNetworks = ['VISA','MASTERCARD'];
-const allowedAuthMethods = ['PAN_ONLY','CRYPTOGRAM_3DS'] ;
+const allowedNetworks = ['VISA', 'MASTERCARD'];
+const allowedAuthMethods = ['PAN_ONLY', 'CRYPTOGRAM_3DS'];
 
 const baseCardPaymentMethod = {
   type: 'CARD',
   parameters: {
     allowedCardNetworks: allowedNetworks,
-    allowedAuthMethods: allowedAuthMethods 
+    allowedAuthMethods: allowedAuthMethods
   }
 };
 
@@ -80,7 +80,7 @@ function onGooglePayLoaded() {
 
 /**
  * Handles the creation of the button to pay with Google Pay.
- * Once created, this button is appended to the DOM, under the element 
+ * Once created, this button is appended to the DOM, under the element
  * 'buy-now'.
  */
 function createAndAddButton() {
@@ -94,7 +94,7 @@ function createAndAddButton() {
   });
 
   googlePayButton.setAttribute('id', 'google-pay-button');
-  domId('buy-now').appendChild(googlePayButton);
+  document.getElementById('buy-now').appendChild(googlePayButton);
 }
 
 /**
@@ -119,7 +119,7 @@ function onGooglePaymentsButtonClicked() {
 
   const transactionInfo = {
     totalPriceStatus: 'FINAL',
-    totalPrice: selectedShirt.price.toString(), 
+    totalPrice: selectedShirt.price.toString(),
     currencyCode: 'USD'
   };
 

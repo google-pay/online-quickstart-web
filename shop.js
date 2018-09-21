@@ -53,7 +53,7 @@ const SHIRT_OPTIONS = [
  * @param  {?string} gender of the t-shirt directory to look into.
  */
 function loadShirtDirectory(gender) {
-  
+
   // Show loading indicator and hide shirt while list loads
   domId('shop-image').style.display = 'none';
   domId('loading').style.display = 'block';
@@ -76,7 +76,7 @@ function loadShirtDirectory(gender) {
 
   // Fetch URL and stash in RAM
   fetch(shirtUrl)
-    .then(function(response) { 
+    .then(function(response) {
       return response.json()
     })
     .then(function(listOfShirts) {
@@ -140,12 +140,12 @@ function renderShirt(shirt) {
  * @param {!array} elementsToHide List holding elements that needs to be hidden.
  */
 function updateModalVisilibity(elementsToShow, elementsToHide) {
-  elementsToShow.forEach(function(element) { 
+  elementsToShow.forEach(function(element) {
     domId(element).style.display = 'flex';
   });
   elementsToHide.forEach(function(element) {
     domId(element).style.display = 'none';
-  }); 
+  });
 }
 
 /**
@@ -195,7 +195,7 @@ function handleHashChange(e) {
     '#shop-tshirt-male': 'nav-tshirt-male',
     '#shop-tshirt-female': 'nav-tshirt-female'
   };
-  
+
   // Deactivate all first
   Object.keys(navElementForHash).forEach(function(key) {
     domId(navElementForHash[key]).className = '';
@@ -254,7 +254,7 @@ function loadTshirtForHash(hash) {
 
 /**
  * Simulates a reaction to the submission of the legacy form.
- * @param {object} e Resulting event from the interaction. 
+ * @param {object} e Resulting event from the interaction.
  * @return {boolan} Contains the result of the action.
  */
 function onCheckoutSubmit(e) {
