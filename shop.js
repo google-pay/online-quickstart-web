@@ -160,6 +160,8 @@ function uiPageShirt(gender) {
 
 /**
  * Presents the legacy checkout form.
+ *
+ * Also loads the font-awesome CSS one time, if not yet loaded.
  */
 function uiPageLegacyCheckoutForm() {
   updateModalVisilibity(
@@ -260,6 +262,7 @@ function loadTshirtForHash(hash) {
 function onCheckoutSubmit(e) {
   if (e && e.stopPropagation) e.stopPropagation();
   alert("This is a demo, no real checkout built");
+  window.location.hash = 'shop-success';
   return false;
 }
 

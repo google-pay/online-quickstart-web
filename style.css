@@ -349,8 +349,8 @@ h1 {
   padding: 0 16px;
 }
 
-.container {
-  margin-top: 1em;
+.page-container {
+  margin: 1em auto;
   background-color: #f2f2f2;
   padding: 5px 20px 15px 20px;
   border: 1px solid lightgrey;
@@ -358,7 +358,7 @@ h1 {
 }
 
 input[type=text] {
-  width: 100%;
+  width: 90%;
   margin-bottom: 20px;
   padding: 12px;
   border: 1px solid #ccc;
