@@ -271,6 +271,24 @@ function onCheckoutSubmit(e) {
  * changes that respond to hash changes.
  */
 function initializeUi() {
+  if (location.protocol !== 'https:') {
+    // Are you developing this locally?
+    // If you want an easy self-signed server try
+    // https://github.com/cortesi/devd
+    // $ devd -sol .
+    // You will see "Your connection is not private" go Advanced > Allow
+    const error = 'Not so fast. This page must be loaded over HTTPS for security.';
+    domId('shop-tshirt').innerHTML = '<div class="page-container">' +
+      '<h2>' + error + '</h2>' +
+      '<p><big>SSL/TLS is a requirement for Google Pay API.</big></p>' +
+      '<p><big>Running a local webserver?<br/>' +
+        'Try <a href="https://github.com/cortesi/devd"><b>devd</b></a> ' +
+        '(eg: <code>$ devd -sol .</code>&nbsp;).</big></p>' +
+      '<p><i>or <a href="https://goo.gl/YuxTHg">search for alternatives</a>.</i></p>' +
+    '</div>';
+    console.error(error);
+    throw error;
+  }
   window.addEventListener('hashchange', function(e) {
     handleHashChange(e);
   });
