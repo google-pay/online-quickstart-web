@@ -91,7 +91,8 @@ let googlePayClient;
 function onGooglePayLoaded() {
 
   googlePayClient = new google.payments.api.PaymentsClient({
-    environment: 'TEST'
+    environment: 'TEST',
+    paymentDataCallback: paymentDataCallback
   });
 
   // Determine readiness to pay using Google Pay
@@ -183,3 +184,31 @@ function onGooglePaymentsButtonClicked() {
       console.error('googlePayClient payment load failed: ', error);
     });
 }
+
+/**
+ * Function called every time any of the options in the payment change,
+ * according to the configuration set on the {@link callbackIntents} of the
+ * {@link loadPaymentData} call.
+ * 
+ * @param {!object} callbackPayload
+ * @return {object} The new variable configuration to render the payments sheet.
+ */
+const paymentDataCallback = callbackPayload => {
+
+  const selectedShippingOptionId = callbackPayload.shippingOptionData.id;
+  const newSurcharges = [{
+    label: 'Shipping',
+    type: 'LINE_ITEM',
+    price: shippingSurcharge[selectedShippingOptionId].toFixed(2),
+    status: 'PENDING'
+  }];
+
+  const newShippingOptionParameters = Object.assign({
+    defaultSelectedOptionId: selectedShippingOptionId
+  }, shippingOptionParameters);
+
+  return {
+    newTransactionInfo: constructTransactionInfo(selectedShirt.price, newSurcharges),
+    newShippingOptionParameters: newShippingOptionParameters
+  };
+};
