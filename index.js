@@ -40,6 +40,35 @@ const baseCardPaymentMethod = {
   }
 };
 
+/**
+ * The shipping options offered for this article
+ */
+const shippingOptionParameters = {
+  shippingOptions: [
+    {
+      id: 'shipping-001',
+      label: '$1.99: Standard shipping',
+      description: 'Delivered on May 15.'
+    },
+    {
+      id: 'shipping-002',
+      label: '$3.99: Expedited shipping',
+      description: 'Delivered on May 12.'
+    },
+    {
+      id: 'shipping-003',
+      label: '$10: Express shipping',
+      description: 'Delivered tomorrow.'
+    },
+  ],
+}
+
+const shippingSurcharge = {
+  'shipping-001': 1.99,
+  'shipping-002': 3.99,
+  'shipping-003': 10
+}
+
 const googlePayBaseConfiguration = {
   apiVersion: 2,
   apiVersionMinor: 0,
