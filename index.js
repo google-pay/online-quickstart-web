@@ -147,12 +147,6 @@ function onGooglePaymentsButtonClicked() {
     merchantName: 'Example Merchant Name'
   };
 
-  const transactionInfo = {
-    totalPriceStatus: 'FINAL',
-    totalPrice: selectedShirt.price.toString(),
-    currencyCode: 'USD'
-  };
-
   // Use a card payment method including all relevant properties
   const cardPaymentMethod = Object.assign({
     tokenizationSpecification: tokenizationSpecification
@@ -164,11 +158,22 @@ function onGooglePaymentsButtonClicked() {
     phoneNumberRequired: true
   };
 
+  const transactionSurcharges = [{
+    label: 'Shipping',
+    type: 'LINE_ITEM',
+    price: '0',
+    status: 'PENDING'
+  }];
+
   // Add the card, merchant and transaction info needed to perform the request
   const paymentDataRequest = Object.assign({}, googlePayBaseConfiguration, {
     allowedPaymentMethods: [cardPaymentMethod],
-    transactionInfo: transactionInfo,
-    merchantInfo: merchantInfo
+    transactionInfo: constructTransactionInfo(selectedShirt.price, transactionSurcharges),
+    merchantInfo: merchantInfo,
+    shippingAddressParameters: {'allowedCountryCodes': ['US', 'ES']},
+    shippingOptionParameters: shippingOptionParameters,
+    shippingAddressRequired: true,
+    callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_METHOD']
   });
 
   // Trigger to open the sheet with a list of payments method available
@@ -211,4 +216,40 @@ const paymentDataCallback = callbackPayload => {
     newTransactionInfo: constructTransactionInfo(selectedShirt.price, newSurcharges),
     newShippingOptionParameters: newShippingOptionParameters
   };
+};
+
+/**
+ * Function that helps constructs the necessary transaction info needed to be
+ * passed to {@link loadPaymentData}, taking the simple price for the item and
+ * a list of surcharges to be added.
+ * 
+ * @param {!number} price The simple price of the item being purchased.
+ * @param {!array} surcharges A list of surcharges to be added. 
+ * @return {object} The transaction info that {@link loadPaymentData} needs.
+ */
+const constructTransactionInfo = (price, surcharges) => {
+  const totalSurcharges = surcharges
+      .map(s => parseInt(s.price))
+      .reduce((s1, s2) => s1 + s2, 0);
+
+  const priceWithSurcharges = price + totalSurcharges;
+  return {
+    totalPriceStatus: 'FINAL',
+    totalPrice: (priceWithSurcharges * 1.1).toFixed(2),
+    totalPriceLabel: '$12.4',
+    currencyCode: 'USD',
+    displayItems: [
+      {
+        label: 'Subtotal',
+        type: 'SUBTOTAL',
+        price: priceWithSurcharges.toFixed(2),
+      },
+      {
+        label: 'Estimated tax',
+        type: 'TAX',
+        price: (priceWithSurcharges * .1).toFixed(2),
+      },
+      ...surcharges
+    ],
+  }
 };
