@@ -40,6 +40,35 @@ const baseCardPaymentMethod = {
   }
 };
 
+/**
+ * The shipping options offered for this article
+ */
+const shippingOptionParameters = {
+  shippingOptions: [
+    {
+      id: 'shipping-001',
+      label: '$1.99: Standard shipping',
+      description: 'Delivered on May 15.'
+    },
+    {
+      id: 'shipping-002',
+      label: '$3.99: Expedited shipping',
+      description: 'Delivered on May 12.'
+    },
+    {
+      id: 'shipping-003',
+      label: '$10: Express shipping',
+      description: 'Delivered tomorrow.'
+    },
+  ],
+}
+
+const shippingSurcharge = {
+  'shipping-001': 1.99,
+  'shipping-002': 3.99,
+  'shipping-003': 10
+}
+
 const googlePayBaseConfiguration = {
   apiVersion: 2,
   apiVersionMinor: 0,
@@ -62,7 +91,8 @@ let googlePayClient;
 function onGooglePayLoaded() {
 
   googlePayClient = new google.payments.api.PaymentsClient({
-    environment: 'TEST'
+    environment: 'TEST',
+    paymentDataCallback: paymentDataCallback
   });
 
   // Determine readiness to pay using Google Pay
@@ -117,12 +147,6 @@ function onGooglePaymentsButtonClicked() {
     merchantName: 'Example Merchant Name'
   };
 
-  const transactionInfo = {
-    totalPriceStatus: 'FINAL',
-    totalPrice: selectedShirt.price.toString(),
-    currencyCode: 'USD'
-  };
-
   // Use a card payment method including all relevant properties
   const cardPaymentMethod = Object.assign({
     tokenizationSpecification: tokenizationSpecification
@@ -134,11 +158,22 @@ function onGooglePaymentsButtonClicked() {
     phoneNumberRequired: true
   };
 
+  const transactionSurcharges = [{
+    label: 'Shipping',
+    type: 'LINE_ITEM',
+    price: '0',
+    status: 'PENDING'
+  }];
+
   // Add the card, merchant and transaction info needed to perform the request
   const paymentDataRequest = Object.assign({}, googlePayBaseConfiguration, {
     allowedPaymentMethods: [cardPaymentMethod],
-    transactionInfo: transactionInfo,
-    merchantInfo: merchantInfo
+    transactionInfo: constructTransactionInfo(selectedShirt.price, transactionSurcharges),
+    merchantInfo: merchantInfo,
+    shippingAddressParameters: {'allowedCountryCodes': ['US', 'ES']},
+    shippingOptionParameters: shippingOptionParameters,
+    shippingAddressRequired: true,
+    callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_METHOD']
   });
 
   // Trigger to open the sheet with a list of payments method available
@@ -154,3 +189,67 @@ function onGooglePaymentsButtonClicked() {
       console.error('googlePayClient payment load failed: ', error);
     });
 }
+
+/**
+ * Function called every time any of the options in the payment change,
+ * according to the configuration set on the {@link callbackIntents} of the
+ * {@link loadPaymentData} call.
+ * 
+ * @param {!object} callbackPayload
+ * @return {object} The new variable configuration to render the payments sheet.
+ */
+const paymentDataCallback = callbackPayload => {
+
+  const selectedShippingOptionId = callbackPayload.shippingOptionData.id;
+  const newSurcharges = [{
+    label: 'Shipping',
+    type: 'LINE_ITEM',
+    price: shippingSurcharge[selectedShippingOptionId].toFixed(2),
+    status: 'PENDING'
+  }];
+
+  const newShippingOptionParameters = Object.assign({
+    defaultSelectedOptionId: selectedShippingOptionId
+  }, shippingOptionParameters);
+
+  return {
+    newTransactionInfo: constructTransactionInfo(selectedShirt.price, newSurcharges),
+    newShippingOptionParameters: newShippingOptionParameters
+  };
+};
+
+/**
+ * Function that helps constructs the necessary transaction info needed to be
+ * passed to {@link loadPaymentData}, taking the simple price for the item and
+ * a list of surcharges to be added.
+ * 
+ * @param {!number} price The simple price of the item being purchased.
+ * @param {!array} surcharges A list of surcharges to be added. 
+ * @return {object} The transaction info that {@link loadPaymentData} needs.
+ */
+const constructTransactionInfo = (price, surcharges) => {
+  const totalSurcharges = surcharges
+      .map(s => parseInt(s.price))
+      .reduce((s1, s2) => s1 + s2, 0);
+
+  const priceWithSurcharges = price + totalSurcharges;
+  return {
+    totalPriceStatus: 'FINAL',
+    totalPrice: (priceWithSurcharges * 1.1).toFixed(2),
+    totalPriceLabel: '$12.4',
+    currencyCode: 'USD',
+    displayItems: [
+      {
+        label: 'Subtotal',
+        type: 'SUBTOTAL',
+        price: priceWithSurcharges.toFixed(2),
+      },
+      {
+        label: 'Estimated tax',
+        type: 'TAX',
+        price: (priceWithSurcharges * .1).toFixed(2),
+      },
+      ...surcharges
+    ],
+  }
+};
