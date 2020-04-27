@@ -2,7 +2,7 @@ name: deploy-firebase-on-push-to-master
 on:
   push:
     branches:
-      - master
+      - pay-demo-site
 
 jobs:
   deploy:
