@@ -18,6 +18,6 @@ jobs:
 
       - name: Perform deploy
         run: |
-          firebase deploy --only hosting:pay-demo --non-interactive 
-          -m "Deployment for commit SHA: $GITHUB_SHA"
+          firebase deploy --only hosting:pay-demo --non-interactive \
+          -m "Deployment for commit SHA: $GITHUB_SHA" \
           --token ${{ secrets.FIREBASE_DEPLOY_TOKEN }}
