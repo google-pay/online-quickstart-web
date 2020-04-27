@@ -7,6 +7,7 @@ on:
 jobs:
   deploy:
     name: Deploy to Firebase
+    runs-on: ubuntu-18.04
     container: node:14.0.0-alpine3.10
 
     steps:
