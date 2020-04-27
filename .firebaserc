@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "devrel-payments"
+  },
+  "targets": {
+    "devrel-payments": {
+      "hosting": {
+        "pay-demo": [
+          "pay-demo"
+        ]
+      }
+    }
+  }
+}
