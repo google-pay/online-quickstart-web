@@ -97,11 +97,12 @@ function onGooglePayLoaded() {
 
   // Determine readiness to pay using Google Pay
   googlePayClient.isReadyToPay(googlePayBaseConfiguration)
-    .then(function(response) {
+    .then(response => {
       if (response.result) {
         createAndAddButton();
       }
-    }).catch(function(error) {
+    })
+    .catch(error => {
       console.error("googlePayClient is unable to pay", error);
       // Did you get "Google Pay APIs should be called in secure context"?
       // You need to be on SSL/TLS (a https:// server)
@@ -179,12 +180,12 @@ function onGooglePaymentsButtonClicked() {
   // Trigger to open the sheet with a list of payments method available
   googlePayClient
     .loadPaymentData(paymentDataRequest)
-    .then(function(paymentData) {
+    .then(paymentData => {
       // Process result – processPaymentData(paymentData);
       console.info('googlePayClient payment load success: ', paymentData);
       window.location.hash = '#shop-success';
-
-    }).catch(function(error) {
+    })
+    .catch(error => {
       // Log error: { statusCode: CANCELED || DEVELOPER_ERROR }
       console.error('googlePayClient payment load failed: ', error);
     });
