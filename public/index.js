@@ -173,8 +173,9 @@ function onGooglePaymentsButtonClicked() {
     merchantInfo: merchantInfo,
     shippingAddressParameters: {'allowedCountryCodes': ['US', 'ES']},
     shippingOptionParameters: shippingOptionParameters,
+    shippingOptionRequired: true,
     shippingAddressRequired: true,
-    callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_METHOD']
+    callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION']
   });
 
   // Trigger to open the sheet with a list of payments method available
