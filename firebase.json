@@ -1,7 +1,6 @@
 {
   "hosting": [
-    {
-      "target": "pay-demo",
+    {      
       "public": "public",
       "ignore": [
         "firebase.json",
