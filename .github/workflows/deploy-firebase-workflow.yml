@@ -30,6 +30,6 @@ jobs:
       with:
         node-version: '18'
     - run: npm install --global firebase-tools
-    - run: firebase deploy
+    - run: firebase deploy --project pay-web-quickstart
       env:
         FIREBASE_TOKEN: ${{secrets.FIREBASE_DEPLOY_TOKEN}}          
