@@ -1,7 +1,7 @@
 # Google Pay Web Checkout Playground
 
 <!--- Open in IDX button -->
-<a href="https://idx.google.com/new?template=https://github.com/google-pay/online-quickstart-web">
+<a href="https://idx.google.com/new?template=https%3A%2F%2Fgithub.com%2Fgoogle-pay%2Fonline-quickstart-web%2Ftree%2Fmaster%2F">
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
