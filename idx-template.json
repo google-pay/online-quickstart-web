@@ -1,0 +1,8 @@
+{
+    "name": "Google Pay Web Checkout Playground",
+    "description": "Use this playground environment to experiment integrating Google Pay, as if you were working directly from your own checkout page.",
+    "categories": ["Web app", "Misc"],
+    "icon": "https://www.gstatic.com/images/branding/productlogos/google_pay_round/v6/192px.svg",
+    "publisher": "Google Pay DevRel",
+    "website": "https://pay-web-quickstart.web.app"
+  }
